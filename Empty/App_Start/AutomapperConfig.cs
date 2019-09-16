@@ -20,22 +20,25 @@ namespace Empty.App_Start
             container.RegisterInstance<IMapper>(mapper);
         }
 
-        public static MapperConfiguration CreateMapperConfig()
+        static MapperConfiguration CreateMapperConfig()
         {
-            return new MapperConfiguration(cfg =>
+            var map = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Authors, AuthorBO>()
+                cfg.CreateMap<Authors, AuthorBO>()//.ForMember(t=> t.Id, to => to.Ignore())
+                .ConstructUsing(item => DependencyResolver.Current.GetService<AuthorBO>());
+
+                cfg.CreateMap<AuthorBO, AuthorViewModel>()
+                .ConstructUsing(item => DependencyResolver.Current.GetService<AuthorViewModel>());
+
+                cfg.CreateMap<AuthorViewModel, AuthorBO>()
                 .ConstructUsing(item => DependencyResolver.Current.GetService<AuthorBO>());
 
                 cfg.CreateMap<AuthorBO, Authors>()
                 .ConstructUsing(item => DependencyResolver.Current.GetService<Authors>());
 
-                cfg.CreateMap<AuthorViewModel, AuthorBO>()
-                .ConstructUsing(item => DependencyResolver.Current.GetService<AuthorBO>());
-
-                cfg.CreateMap<AuthorBO, AuthorViewModel>()
-                .ConstructUsing(item => DependencyResolver.Current.GetService<AuthorViewModel>());
-            });
+            }
+            );
+            return map;
         }
     }
 }
