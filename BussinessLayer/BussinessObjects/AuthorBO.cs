@@ -15,6 +15,8 @@ namespace BussinessLayer.BussinessObjects
         protected readonly IUnityContainer container;
 
         public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
 
         public AuthorBO(IMapper mapper, UnitOfWorkFactory<Authors> unit, IUnityContainer container) : base(mapper, unit)
         {
